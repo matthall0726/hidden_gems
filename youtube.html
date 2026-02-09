@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>YouTube Player</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #player {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+<iframe
+  id="player"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+  referrerpolicy="strict-origin-when-cross-origin">
+</iframe>
+
+<script>
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const videoId = params.get('v');
+
+  if (!videoId) {
+    document.body.innerHTML =
+      '<div style="color:white;padding:20px;text-align:center">Missing ?v=VIDEO_ID</div>';
+    return;
+  }
+
+  const autoplay = params.get('autoplay') || '0';
+  const mute = params.get('mute') || '0';
+  const playsinline = params.get('playsinline') || '1';
+  const controls = params.get('controls') || '1';
+  const rel = params.get('rel') || '0';
+  const modestbranding = params.get('modestbranding') || '1';
+
+  const embedParams = new URLSearchParams({
+    autoplay,
+    mute,
+    playsinline,
+    controls,
+    rel,
+    modestbranding,
+    origin: window.location.origin
+  });
+
+  const embedURL =
+    'https://www.youtube-nocookie.com/embed/' +
+    encodeURIComponent(videoId) +
+    '?' +
+    embedParams.toString();
+
+  document.getElementById('player').src = embedURL;
+})();
+</script>
+
+</body>
+</html>
